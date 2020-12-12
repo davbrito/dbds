@@ -31,14 +31,11 @@ DBDS_EXPORT const void* dbds_set_insert(dbds_set* s, const void* value,
 }
 
 /// Remove and element of the set.
-// TODO
-int i = 0;
 DBDS_EXPORT void dbds_set_remove(dbds_set* s, const void* value) {
   if (!s || !value) return;
   btree_node** node = find_node((btree_node**)&s->data, value, s->comp);
   if (*node) {
     remove_node(node);
-    printf("**** %d\n", i++);
     s->size--;
   }
 }
