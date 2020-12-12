@@ -22,10 +22,6 @@ const int nums[TEST_NUMS_N] = {10, 23, 10, 5,
 //  - preorder: 10 5 6 23 43
 //  - postorder: 6 5 543 23 10
 
-bool inorder_test_result = true;
-bool preorder_test_result = true;
-bool postrder_test_result = true;
-
 struct traversal_test_data {
   int i;
   const int *nums;
