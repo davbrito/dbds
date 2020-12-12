@@ -16,17 +16,17 @@ typedef struct dbds_set {
   void* data;  // An implementaton defined type.
   size_t size;
   comp_function comp;
+  size_t value_size;
 } dbds_set;
 
 /// Create a new empty set with the given comparison function.
-DBDS_EXPORT dbds_set dbds_set_new(comp_function);
+DBDS_EXPORT dbds_set dbds_set_new(size_t value_size, comp_function);
 
 /// Clears the content of the set and release the allocated memory.
 DBDS_EXPORT void dbds_set_clear(dbds_set*);
 
 /// Inserts an element on the set.
-DBDS_EXPORT const void* dbds_set_insert(dbds_set*, const void* value,
-                                        size_t data_size);
+DBDS_EXPORT const void* dbds_set_insert(dbds_set*, const void* value);
 
 /// Remove and element of the set.
 DBDS_EXPORT void dbds_set_remove(dbds_set*, const void* value);

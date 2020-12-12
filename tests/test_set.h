@@ -25,7 +25,6 @@ const int nums[TEST_NUMS_N] = {10, 23, 10, 5,
 struct traversal_test_data {
   int i;
   const int *nums;
-  void (*traversal)(const dbds_set *, visitor_function);
   bool result;
 } tdata;
 
@@ -57,7 +56,7 @@ bool test_postorder(const dbds_set *set) {
 
 test_function test_set;
 void test_set() {
-  dbds_set set = dbds_set_new((comp_function)&compare_ints);
+  dbds_set set = dbds_set_new(sizeof(int), (comp_function)&compare_ints);
   CHECK_EQ_INT("Set initialization: ", set.size, 0);
 
   int n = 10;
@@ -67,7 +66,7 @@ void test_set() {
   // test `dbds_set_insert`
   for (int i = 0; i < TEST_NUMS_N; i++) {
     int num = nums[i];
-    const int *inserted = dbds_set_insert(&set, &num, sizeof num);
+    const int *inserted = dbds_set_insert(&set, &num);
 
     CHECK_I("Set contains", num, dbds_set_contains(&set, &num));
     CHECK_EQ_INT("Set insert returns value: ", *inserted, num);

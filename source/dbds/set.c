@@ -5,26 +5,32 @@
 
 #include "dbds/set/node.h"
 
-DBDS_EXPORT dbds_set dbds_set_new(comp_function comp) {
+btree_node** get_ptr_to_root(const dbds_set* set) {
+  return (btree_node**)&set->data;
+}
+
+btree_node* get_root(const dbds_set* set) { return (btree_node*)set->data; }
+
+DBDS_EXPORT dbds_set dbds_set_new(size_t value_size, comp_function comp) {
   return (dbds_set){
       .data = NULL,
       .size = 0,
       .comp = comp,
+      .value_size = value_size,
   };
 }
 
 DBDS_EXPORT void dbds_set_clear(dbds_set* s) {
   if (!s || !s->data) return;
-  remove_tree((btree_node**)&s->data);
+  remove_tree(get_ptr_to_root(s));
   s->size = 0u;
 }
 
-DBDS_EXPORT const void* dbds_set_insert(dbds_set* s, const void* value,
-                                        size_t data_size) {
+DBDS_EXPORT const void* dbds_set_insert(dbds_set* s, const void* value) {
   if (!s || !value) return NULL;
-  btree_node** node = find_node((btree_node**)&s->data, value, s->comp);
+  btree_node** node = find_node(get_ptr_to_root(s), value, s->comp);
   if (!(*node)) {
-    (*node) = new_node(value, data_size);
+    (*node) = new_node(value, s->value_size);
     s->size++;
   }
   return (*node)->data;
@@ -33,7 +39,7 @@ DBDS_EXPORT const void* dbds_set_insert(dbds_set* s, const void* value,
 /// Remove and element of the set.
 DBDS_EXPORT void dbds_set_remove(dbds_set* s, const void* value) {
   if (!s || !value) return;
-  btree_node** node = find_node((btree_node**)&s->data, value, s->comp);
+  btree_node** node = find_node(get_ptr_to_root(s), value, s->comp);
   if (*node) {
     remove_node(node);
     s->size--;
@@ -43,20 +49,20 @@ DBDS_EXPORT void dbds_set_remove(dbds_set* s, const void* value) {
 /// Check if the set contains an element.
 DBDS_EXPORT bool dbds_set_contains(const dbds_set* s, const void* value) {
   if (!s || !value) return NULL;
-  return *find_node((btree_node**)&s->data, value, s->comp) != NULL;
+  return *find_node(get_ptr_to_root(s), value, s->comp) != NULL;
 }
 
 /// Pre-order traversal on the tree
 DBDS_EXPORT void dbds_set_preorder(const dbds_set* s, visitor_function func) {
-  node_preorder((btree_node*)s->data, func);
+  node_preorder(get_root(s), func);
 }
 
 /// Post-order traversal on the tree
 DBDS_EXPORT void dbds_set_postorder(const dbds_set* s, visitor_function func) {
-  node_postorder((btree_node*)s->data, func);
+  node_postorder(get_root(s), func);
 }
 
 /// In-order traversal on the tree
 DBDS_EXPORT void dbds_set_inorder(const dbds_set* s, visitor_function func) {
-  node_inorder((btree_node*)s->data, func);
+  node_inorder(get_root(s), func);
 }
