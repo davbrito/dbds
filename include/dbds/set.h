@@ -37,12 +37,12 @@ DBDS_EXPORT bool dbds_set_contains(const dbds_set*, const void* value);
 typedef void (*visitor_function)(const void*);
 
 /// Pre-order traversal on the tree
-DBDS_EXPORT bool dbds_set_preorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_preorder(const dbds_set*, visitor_function);
 
 /// Post-order traversal on the tree
-DBDS_EXPORT bool dbds_set_postorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_postorder(const dbds_set*, visitor_function);
 
 /// In-order traversal on the tree
-DBDS_EXPORT bool dbds_set_inorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_inorder(const dbds_set*, visitor_function);
 
 #endif  // DBDS_SET_H_
