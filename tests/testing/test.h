@@ -3,30 +3,36 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-typedef void(test_function)();
-
-typedef struct {
+typedef struct test {
   const char* name;
-  test_function* fp;
+  const char* file;
+  unsigned line;
 } test;
+
+typedef const test*(test_function)();
+typedef test_function* test_function_ptr;
 
 #define MAX_TEST_DESC 100
 
-char test_failed_desc[MAX_TEST_DESC] = "";
+char test_failed_description[MAX_TEST_DESC] = "";
 
-bool __test_failed() { return test_failed_desc[0] != '\0'; }
+bool __test_failed() { return test_failed_description[0] != '\0'; }
 
 bool __check(const char* context, bool assertion) {
-  if (!assertion) strcpy(test_failed_desc, context);
+  if (!assertion) strcpy(test_failed_description, context);
   return !__test_failed();
 }
+
+#define TEST_DATA_VAR_NAME __test_data
+#define RETURN_TEST_CASE return &TEST_DATA_VAR_NAME
 
 #define _REPORT_FILE_AND_EXIT_IF(fails)              \
   if (fails) {                                       \
     printf("    on -> %s:%i\n", __FILE__, __LINE__); \
-    return;                                          \
+    RETURN_TEST_CASE;                                \
   }
 
 #define _CHECK_1(name, assertion)                                         \
@@ -66,28 +72,43 @@ bool __check(const char* context, bool assertion) {
 #define CHECK_EQ_PTR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%p", _EQ_COMP)
 #define CHECK_EQ_STR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%s", _STREQ_CMP)
 
-// const char __op[3] = __assrt ? "==" : "!=";
+#define TEST_CASE_FUNC(f, name_, file_, line_)     \
+  test_function f;                                 \
+  const test* f() {                                \
+    static const test TEST_DATA_VAR_NAME = (test){ \
+        .name = name_,                             \
+        .file = file_,                             \
+        .line = line_,                             \
+    };
 
-// #define CHECK_EQ_I(name, i, lho, rho)                                       \
-//   _CHECK_2(name "(" #lho " == " #rho ")", (lho == rho), "(%i) %d == %d", i, \
-//            lho, rho)
+#define TEST_CASE(fname, name) TEST_CASE_FUNC(fname, name, __FILE__, __LINE__)
 
-bool run_test(const test t) {
-  printf("Test %s:\n", t.name);
-  t.fp();
-  if (__test_failed()) {
-    printf("    ERROR: %s\n", test_failed_desc);
+#define TEST_CASE_END() \
+  RETURN_TEST_CASE;     \
+  }
+
+#define REGISTER_TESTS(...)                             \
+  test_function_ptr __test_set[] = {__VA_ARGS__, NULL}; \
+  int main() { run_tests(__test_set); }
+
+bool run_test(test_function_ptr fp) {
+  const test* t = fp();
+  printf("Test %s: (%s:%d)\n", t->name, t->file, t->line);
+
+  bool failed = __test_failed();
+  if (failed) {
+    printf("    ERROR: %s\n", test_failed_description);
   } else {
     printf("    SUCCESS\n");
   }
-  return !__test_failed();
+  return failed;
 }
 
-bool run_tests(const test ts[]) {
-  for (const test* i = &ts[0]; i->fp != NULL; ++i) {
-    if (!run_test(*i)) return false;
+void run_tests(test_function_ptr* ts) {
+  while (*ts) {
+    printf("----------------------------------\n");
+    if (!run_test(*ts++)) break;
   }
-  return true;
 }
 
 #endif  // DBDS_TESTING_TEST_H_

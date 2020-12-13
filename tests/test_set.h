@@ -54,8 +54,7 @@ bool test_postorder(const dbds_set *set) {
   return test_traversal(set, &dbds_set_postorder, (int[]){6, 5, 543, 23, 10});
 }
 
-test_function test_set;
-void test_set() {
+TEST_CASE(test_set, "Test set") {
   dbds_set set = dbds_set_new(sizeof(int), (comp_function)&compare_ints);
   CHECK_EQ_INT("Set initialization: ", set.size, 0);
 
@@ -96,5 +95,6 @@ void test_set() {
   CHECK_EQ_UINT("Set clear: ", set.size, 0u);
   CHECK_EQ_PTR("Set clear: ", set.data, NULL);
 }
+TEST_CASE_END()
 
 #endif  // DBDS_TEST_SET_H_

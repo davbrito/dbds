@@ -4,9 +4,7 @@
 #include "dbds/vector.h"
 #include "testing/test.h"
 
-test_function test_vector;
-
-void test_vector() {
+TEST_CASE(test_vector, "Test vector") {
   dbds_vector vec = dbds_vector_new(0, sizeof(int));
   CHECK("Test empty vector initialization", vec.size == 0);
   const int elements = 20;
@@ -34,5 +32,6 @@ void test_vector() {
   CHECK("Test clear vector",
         vec.size == 0 && vec.capacity == 0 && vec.data == NULL);
 }
+TEST_CASE_END()
 
 #endif  // DBDS_TEST_VECTOR_H_
