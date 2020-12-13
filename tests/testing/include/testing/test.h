@@ -17,14 +17,10 @@ typedef test_function* test_function_ptr;
 
 #define MAX_TEST_DESC 100
 
-char test_failed_description[MAX_TEST_DESC] = "";
+static char test_failed_description[MAX_TEST_DESC] = "";
 
-bool __test_failed() { return test_failed_description[0] != '\0'; }
-
-bool __check(const char* context, bool assertion) {
-  if (!assertion) strcpy(test_failed_description, context);
-  return !__test_failed();
-}
+bool __test_failed();
+bool __check(const char* context, bool assertion);
 
 #define TEST_DATA_VAR_NAME __test_data
 #define RETURN_TEST_CASE return &TEST_DATA_VAR_NAME
@@ -87,28 +83,17 @@ bool __check(const char* context, bool assertion) {
   RETURN_TEST_CASE;     \
   }
 
+#define DECLARE_TEST_FUNCTIONS(...) test_function __VA_ARGS__;
+
 #define REGISTER_TESTS(...)                             \
+  DECLARE_TEST_FUNCTIONS(__VA_ARGS__)                   \
   test_function_ptr __test_set[] = {__VA_ARGS__, NULL}; \
   int main() { run_tests(__test_set); }
 
-bool run_test(test_function_ptr fp) {
-  const test* t = fp();
-  printf("Test %s: (%s:%d)\n", t->name, t->file, t->line);
+// Execute a test function
+bool run_test(test_function_ptr fp);
 
-  bool failed = __test_failed();
-  if (failed) {
-    printf("    ERROR: %s\n", test_failed_description);
-  } else {
-    printf("    SUCCESS\n");
-  }
-  return failed;
-}
-
-void run_tests(test_function_ptr* ts) {
-  while (*ts) {
-    printf("----------------------------------\n");
-    if (!run_test(*ts++)) break;
-  }
-}
+// Execute several test functions
+void run_tests(test_function_ptr* ts);
 
 #endif  // DBDS_TESTING_TEST_H_

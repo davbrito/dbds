@@ -64,15 +64,7 @@ generate_export_header(
 
 # Testing
 if(BUILD_TESTS)
-  enable_testing()
-  set(TEST_MAIN_NAME test_main)
-  file(GLOB_RECURSE TEST_HEADERS tests/*.h)
-  set(TEST_MAIN_SOURCES tests/main.c ${TEST_HEADERS})
-  add_executable(${TEST_MAIN_NAME} ${TEST_MAIN_SOURCES})
-  target_link_libraries(${TEST_MAIN_NAME} ${PROJECT_NAME})
-  set_property(TARGET ${TEST_MAIN_NAME} PROPERTY FOLDER tests)
-  assign_source_group(${TEST_MAIN_SOURCES})
-  add_test(${TEST_MAIN_NAME} bin/${TEST_MAIN_NAME})
+  add_subdirectory(tests)
 endif()
 
 # Installation  #
