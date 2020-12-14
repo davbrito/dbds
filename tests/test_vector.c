@@ -1,6 +1,3 @@
-#if !defined(DBDS_TEST_VECTOR_H_)
-#define DBDS_TEST_VECTOR_H_
-
 #include "dbds/vector.h"
 #include "testing/test.h"
 
@@ -33,5 +30,3 @@ TEST_CASE(test_vector, "Test vector") {
         vec.size == 0 && vec.capacity == 0 && vec.data == NULL);
 }
 TEST_CASE_END()
-
-#endif  // DBDS_TEST_VECTOR_H_

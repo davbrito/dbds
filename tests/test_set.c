@@ -1,6 +1,3 @@
-#if !defined(DBDS_TEST_SET_H_)
-#define DBDS_TEST_SET_H_
-
 #include "dbds/set.h"
 #include "testing/test.h"
 
@@ -33,7 +30,8 @@ void test_visitor(const int *num_ptr) {
 }
 
 bool test_traversal(const dbds_set *set,
-                    void (*traversal)(const dbds_set *, dbds_set_visitor_function),
+                    void (*traversal)(const dbds_set *,
+                                      dbds_set_visitor_function),
                     const int expected[TEST_NUMS_UNIQUE_N]) {
   tdata.i = 0;
   tdata.nums = expected;
@@ -96,5 +94,3 @@ TEST_CASE(test_set, "Test set") {
   CHECK_EQ_PTR("Set clear: ", set.data, NULL);
 }
 TEST_CASE_END()
-
-#endif  // DBDS_TEST_SET_H_
