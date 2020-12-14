@@ -34,15 +34,15 @@ DBDS_EXPORT void dbds_set_remove(dbds_set*, const void* value);
 /// Check if the set contains an element.
 DBDS_EXPORT bool dbds_set_contains(const dbds_set*, const void* value);
 
-typedef void (*visitor_function)(const void*);
+typedef void (*dbds_set_visitor_function)(const void*);
 
 /// Pre-order traversal on the tree
-DBDS_EXPORT void dbds_set_preorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_preorder(const dbds_set*, dbds_set_visitor_function);
 
 /// Post-order traversal on the tree
-DBDS_EXPORT void dbds_set_postorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_postorder(const dbds_set*, dbds_set_visitor_function);
 
 /// In-order traversal on the tree
-DBDS_EXPORT void dbds_set_inorder(const dbds_set*, visitor_function);
+DBDS_EXPORT void dbds_set_inorder(const dbds_set*, dbds_set_visitor_function);
 
 #endif  // DBDS_SET_H_

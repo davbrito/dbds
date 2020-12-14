@@ -53,16 +53,16 @@ DBDS_EXPORT bool dbds_set_contains(const dbds_set* s, const void* value) {
 }
 
 /// Pre-order traversal on the tree
-DBDS_EXPORT void dbds_set_preorder(const dbds_set* s, visitor_function func) {
+DBDS_EXPORT void dbds_set_preorder(const dbds_set* s, dbds_set_visitor_function func) {
   node_preorder(get_root(s), func);
 }
 
 /// Post-order traversal on the tree
-DBDS_EXPORT void dbds_set_postorder(const dbds_set* s, visitor_function func) {
+DBDS_EXPORT void dbds_set_postorder(const dbds_set* s, dbds_set_visitor_function func) {
   node_postorder(get_root(s), func);
 }
 
 /// In-order traversal on the tree
-DBDS_EXPORT void dbds_set_inorder(const dbds_set* s, visitor_function func) {
+DBDS_EXPORT void dbds_set_inorder(const dbds_set* s, dbds_set_visitor_function func) {
   node_inorder(get_root(s), func);
 }

@@ -33,12 +33,12 @@ void test_visitor(const int *num_ptr) {
 }
 
 bool test_traversal(const dbds_set *set,
-                    void (*traversal)(const dbds_set *, visitor_function),
+                    void (*traversal)(const dbds_set *, dbds_set_visitor_function),
                     const int expected[TEST_NUMS_UNIQUE_N]) {
   tdata.i = 0;
   tdata.nums = expected;
   tdata.result = true;
-  traversal(set, (visitor_function)&test_visitor);
+  traversal(set, (dbds_set_visitor_function)&test_visitor);
   return tdata.result;
 }
 

@@ -72,7 +72,7 @@ btree_node** find_node(btree_node** root, const void* data,
   return root;
 }
 
-void node_preorder(const btree_node* n, visitor_function func) {
+void node_preorder(const btree_node* n, dbds_set_visitor_function func) {
   if (n) {
     func(n->data);
     node_preorder(n->left, func);
@@ -80,7 +80,7 @@ void node_preorder(const btree_node* n, visitor_function func) {
   }
 }
 
-void node_postorder(const btree_node* n, visitor_function func) {
+void node_postorder(const btree_node* n, dbds_set_visitor_function func) {
   if (n) {
     node_postorder(n->left, func);
     node_postorder(n->right, func);
@@ -88,7 +88,7 @@ void node_postorder(const btree_node* n, visitor_function func) {
   }
 }
 
-void node_inorder(const btree_node* n, visitor_function func) {
+void node_inorder(const btree_node* n, dbds_set_visitor_function func) {
   if (n) {
     node_inorder(n->left, func);
     func(n->data);
