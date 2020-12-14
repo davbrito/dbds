@@ -20,8 +20,9 @@ bool run_test(test_function_ptr fp) {
   return !failed;
 }
 
-void run_tests(test_function_ptr* ts) {
+bool run_tests(test_function_ptr* ts) {
   while (*ts) {
-    if (!run_test(*ts++)) break;
+    if (!run_test(*ts++)) return false;
   }
+  return true;
 }

@@ -88,12 +88,12 @@ bool __check(const char* context, bool assertion);
 #define REGISTER_TESTS(...)                             \
   DECLARE_TEST_FUNCTIONS(__VA_ARGS__)                   \
   test_function_ptr __test_set[] = {__VA_ARGS__, NULL}; \
-  int main() { run_tests(__test_set); }
+  int main() { return run_tests(__test_set) ? EXIT_SUCCESS : EXIT_FAILURE; }
 
 // Execute a test function
 bool run_test(test_function_ptr fp);
 
 // Execute several test functions
-void run_tests(test_function_ptr* ts);
+bool run_tests(test_function_ptr* ts);
 
 #endif  // DBDS_TESTING_TEST_H_
