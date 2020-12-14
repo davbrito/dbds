@@ -64,6 +64,8 @@ generate_export_header(
 
 # Testing
 if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(testing)
   add_subdirectory(tests)
 endif()
 
