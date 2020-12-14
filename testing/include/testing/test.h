@@ -65,6 +65,7 @@ bool __check(const char* context, bool assertion);
 
 #define CHECK_EQ_INT(name, lho, rho) _CHECK_EQ(name, lho, rho, "%d", _EQ_COMP)
 #define CHECK_EQ_UINT(name, lho, rho) _CHECK_EQ(name, lho, rho, "%u", _EQ_COMP)
+#define CHECK_EQ_CHAR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%c", _EQ_COMP)
 #define CHECK_EQ_PTR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%p", _EQ_COMP)
 #define CHECK_EQ_STR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%s", _STREQ_CMP)
 
