@@ -55,7 +55,7 @@ bool __check(const char* context, bool assertion);
   {                                                                      \
     bool __assrt = eq_cmp(lho, rho);                                     \
     char __name[MAX_TEST_DESC];                                          \
-    sprintf(__name, name #lho " (" fmt ") == " #rho " (" fmt ")", (lho), \
+    sprintf(__name, name ": " #lho " (" fmt ") == " #rho " (" fmt ")", (lho), \
             (rho));                                                      \
     _CHECK_1(__name, __assrt);                                           \
   }
@@ -65,7 +65,7 @@ bool __check(const char* context, bool assertion);
 
 #define CHECK_EQ_INT(name, lho, rho) _CHECK_EQ(name, lho, rho, "%d", _EQ_COMP)
 #define CHECK_EQ_UINT(name, lho, rho) _CHECK_EQ(name, lho, rho, "%u", _EQ_COMP)
-#define CHECK_EQ_CHAR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%c", _EQ_COMP)
+#define CHECK_EQ_CHAR(name, lho, rho) _CHECK_EQ(name, lho, rho, "'%c'", _EQ_COMP)
 #define CHECK_EQ_PTR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%p", _EQ_COMP)
 #define CHECK_EQ_STR(name, lho, rho) _CHECK_EQ(name, lho, rho, "%s", _STREQ_CMP)
 
@@ -96,5 +96,6 @@ bool run_test(test_function_ptr fp);
 
 // Execute several test functions
 bool run_tests(test_function_ptr* ts);
+
 
 #endif  // DBDS_TESTING_TEST_H_
