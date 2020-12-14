@@ -9,7 +9,7 @@ bool __check(const char* context, bool assertion) {
 
 bool run_test(test_function_ptr fp) {
   const test* t = fp();
-  printf("Test %s: (%s:%d)\n", t->name, t->file, t->line);
+  printf("Test %s: (%s:%u)\n", t->name, t->file, t->line);
 
   bool failed = __test_failed();
   if (failed) {
