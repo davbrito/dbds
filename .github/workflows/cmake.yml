@@ -1,0 +1,71 @@
+name: CMake
+
+on: [pull_request]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+  BUILD_SHARED_LIBS: FALSE
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    env:
+      COVERAGE_PATH: ${{ github.workspace }}/coverage/lcov.info
+      BUILD_PATH: ${{ github.workspace }}/build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install lcov
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y lcov
+
+      - name: Create Build Environment
+        # Some projects don't allow in-source building, so create a separate build directory
+        # We'll use this as our working directory for all subsequent commands
+        shell: bash
+        run: cmake -E make_directory $BUILD_PATH
+
+      - name: Configure CMake
+        # Use a bash shell so we can use the same syntax for environment variable
+        # access regardless of the host operating system
+        shell: bash
+        run: cmake -S $GITHUB_WORKSPACE -B $BUILD_PATH -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=BUILD_SHARED_LIBS
+
+      - name: Build
+        shell: bash
+        # Execute the build.  You can specify a specific target with "--target <NAME>"
+        run: cmake --build $BUILD_PATH --config $BUILD_TYPE
+
+      - name: Test
+        working-directory: ${{ env.BUILD_PATH }}
+        shell: bash
+        # Execute tests defined by the CMake configuration.
+        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+        run: ctest -C $BUILD_TYPE --verbose
+
+      - name: Coverage Report
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          TESTS_PATH: ${{ github.workspace }}/tests
+          TESTING_LIBRARY_PATH: ${{ github.workspace }}/testing
+        shell: bash
+        run: |
+          mkdir ${{ github.workspace }}//coverage
+          lcov --capture --directory $BUILD_PATH --output-file $COVERAGE_PATH
+          lcov --remove $COVERAGE_PATH '/usr/*' --output-file $COVERAGE_PATH
+          lcov --remove $COVERAGE_PATH $TESTS_PATH/* --output-file $COVERAGE_PATH
+          lcov --remove $COVERAGE_PATH $TESTING_LIBRARY_PATH/* --output-file $COVERAGE_PATH
+          lcov --list $COVERAGE_PATH
+
+      - name: Coveralls GitHub Action
+        if: matrix.os == 'ubuntu-latest'
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{ env.COVERAGE_PATH }}
