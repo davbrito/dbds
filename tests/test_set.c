@@ -54,7 +54,7 @@ bool test_postorder(const dbds_set *set) {
 
 TEST_CASE(test_set, "Test set") {
   dbds_set set = dbds_set_new(sizeof(int), (comp_function)&compare_ints);
-  CHECK_EQ_INT("Set initialization: ", set.size, 0);
+  CHECK_EQ_UINT("Set initialization: ", set.size, 0u);
 
   int n = 10;
 

@@ -9,7 +9,8 @@ TEST_CASE(test_vector, "Test vector") {
   for (int i = 0; i < elements; i++) {
     const int *ptr = dbds_vector_push_back(&vec, &i);
     CHECK_I("Test push back", i,
-            vec.size == i + 1 && vec.capacity != 0 && vec.data != NULL);
+            vec.size == (unsigned)(i + 1) && vec.capacity != 0u &&
+                vec.data != NULL);
     CHECK_I("Test push back return value", i, *ptr == i);
   }
 
@@ -20,7 +21,7 @@ TEST_CASE(test_vector, "Test vector") {
 
   for (int i = 0; i < elements; i++) {
     dbds_vector_pop_back(&vec);
-    CHECK_I("Test pop back", i, vec.size == elements - i - 1);
+    CHECK_I("Test pop back", i, vec.size == (unsigned)(elements - i - 1));
     int *ptr = dbds_vector_get(&vec, elements - i - 1);
     CHECK_I("Test pop back then get", i, ptr == NULL);
   }
